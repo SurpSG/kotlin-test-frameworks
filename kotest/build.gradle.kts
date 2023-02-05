@@ -1,19 +1,9 @@
 plugins {
-    id("java")
-}
-
-group = "org.example"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
+    `test-framework-subproject`
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-}
+    implementation(project(":code-to-test"))
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
+    testImplementation("io.kotest:kotest-runner-junit5:5.5.4")
 }
