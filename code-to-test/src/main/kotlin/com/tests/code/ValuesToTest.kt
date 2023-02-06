@@ -1,8 +1,6 @@
 package com.tests.code
 
-const val ACTUAL_STRING = "string value to test"
-
-fun stringToTest() = ACTUAL_STRING
+const val STRING_VALUE_TO_TEST = "string value to test"
 
 fun integer() = 0
 

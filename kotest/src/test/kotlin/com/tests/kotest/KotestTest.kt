@@ -1,6 +1,6 @@
 package com.tests.kotest
 
-import com.tests.code.stringToTest
+import com.tests.code.STRING_VALUE_TO_TEST
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.string.shouldBeBlank
 import io.kotest.matchers.string.shouldContain
@@ -10,15 +10,11 @@ class KotestTest : FunSpec() {
 
     init {
         test("string should start with x") {
-            val actualValue = stringToTest()
-
-            actualValue shouldStartWith "x"
+            STRING_VALUE_TO_TEST shouldStartWith "x"
         }
 
         test("string chain") {
-            val actualValue = stringToTest()
-
-            actualValue.shouldStartWith("x")
+            STRING_VALUE_TO_TEST.shouldStartWith("x")
                 .shouldBeBlank()
                 .shouldContain("Ajax")
         }

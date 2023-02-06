@@ -1,8 +1,6 @@
 package com.tests.kluent
 
-import com.tests.code.ACTUAL_STRING
-import com.tests.code.stringToTest
-import org.amshove.kluent.`should be instance of`
+import com.tests.code.STRING_VALUE_TO_TEST
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldContainNone
@@ -15,11 +13,10 @@ class KluentTest {
     inner class StringTest {
         @Test
         fun `string value test`() {
-            val actualValue: String = stringToTest()
+            STRING_VALUE_TO_TEST shouldBeEqualTo STRING_VALUE_TO_TEST
 
-            actualValue shouldBeEqualTo ACTUAL_STRING
-
-            actualValue.shouldBeEqualTo("aaa")
+            STRING_VALUE_TO_TEST
+                .shouldBeEqualTo("aaa")
                 .shouldContainNone("a", "b", "c")
                 .shouldBeNull()
         }
