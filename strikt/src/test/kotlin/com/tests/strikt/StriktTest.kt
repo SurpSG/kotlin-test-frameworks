@@ -91,7 +91,7 @@ class StriktTest {
         }
 
         @Test
-        fun `assertions with context(AKA soft assertion)`() {
+        fun `soft assertion`() {
             expectThat(1) {
                 isNotEqualTo(0)
                 isEqualTo(2)
