@@ -6,11 +6,6 @@ import com.tests.code.EMPLOYEE_JOHN
 import com.tests.code.Employee
 import com.tests.code.LIST_1_2_3
 import com.tests.code.MAP_EMPLOYEES
-import com.tests.code.EMPLOYEES
-import com.tests.code.EMPLOYEE_ALICE
-import com.tests.code.EMPLOYEE_JOHN
-import com.tests.code.LIST_1_2_3
-import com.tests.code.MAP_EMPLOYEES
 import com.tests.code.STRING_VALUE_TO_TEST
 import jdk.dynalink.linker.support.Guards.isNotNull
 import org.junit.jupiter.api.Nested
@@ -36,36 +31,12 @@ import strikt.assertions.flatMap
 import strikt.assertions.get
 import strikt.assertions.getValue
 import strikt.assertions.hasEntry
-import strikt.assertions.all
-import strikt.assertions.any
-import strikt.assertions.atLeast
-import strikt.assertions.atMost
-import strikt.assertions.containsExactlyInAnyOrder
-import strikt.assertions.containsKey
-import strikt.assertions.containsKeys
-import strikt.assertions.count
-import strikt.assertions.doesNotContainKey
-import strikt.assertions.exactly
-import strikt.assertions.filter
-import strikt.assertions.filterIsInstance
-import strikt.assertions.first
-import strikt.assertions.flatMap
-import strikt.assertions.get
-import strikt.assertions.getValue
-import strikt.assertions.hasEntry
 import strikt.assertions.hasLength
 import strikt.assertions.hasSize
 import strikt.assertions.isA
-import strikt.assertions.hasSize
 import strikt.assertions.isBlank
 import strikt.assertions.isEmpty
 import strikt.assertions.isEqualTo
-import strikt.assertions.isEqualToIgnoringCase
-import strikt.assertions.isGreaterThan
-import strikt.assertions.isGreaterThanOrEqualTo
-import strikt.assertions.isLessThan
-import strikt.assertions.isLessThanOrEqualTo
-import strikt.assertions.isNotEmpty
 import strikt.assertions.isEqualToIgnoringCase
 import strikt.assertions.isFailure
 import strikt.assertions.isGreaterThan
@@ -74,13 +45,6 @@ import strikt.assertions.isLessThan
 import strikt.assertions.isLessThanOrEqualTo
 import strikt.assertions.isNotEmpty
 import strikt.assertions.isNotEqualTo
-import strikt.assertions.isNull
-import strikt.assertions.isNullOrBlank
-import strikt.assertions.isNullOrEmpty
-import strikt.assertions.isSorted
-import strikt.assertions.isUpperCase
-import strikt.assertions.last
-import strikt.assertions.map
 import strikt.assertions.isNotNull
 import strikt.assertions.isNull
 import strikt.assertions.isNullOrBlank
@@ -93,8 +57,6 @@ import strikt.assertions.last
 import strikt.assertions.length
 import strikt.assertions.map
 import strikt.assertions.matches
-import strikt.assertions.none
-import strikt.assertions.single
 import strikt.assertions.message
 import strikt.assertions.none
 import strikt.assertions.single
@@ -275,7 +237,7 @@ class StriktTest {
         }
 
         @Test
-        fun `fields`() {
+        fun `object properties`() {
             expectThat(EMPLOYEE_ALICE) {
                 get { name }.isEqualTo("Alice")
                 get { department.name }.isNotEmpty()
