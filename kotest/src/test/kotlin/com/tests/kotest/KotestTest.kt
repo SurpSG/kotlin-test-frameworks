@@ -8,6 +8,9 @@ import com.tests.code.LIST_1_2_3
 import com.tests.code.MAP_EMPLOYEES
 import com.tests.code.STRING_VALUE_TO_TEST
 import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldBeSorted
@@ -51,8 +54,13 @@ import io.kotest.matchers.string.shouldHaveLength
 import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotBeEmpty
 import io.kotest.matchers.string.shouldStartWith
+import io.kotest.matchers.throwable.shouldHaveMessage
+import io.kotest.matchers.throwable.shouldNotHaveCause
+import io.kotest.matchers.throwable.shouldNotHaveMessage
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
+import org.junit.jupiter.api.Test
 
 // Kotest IDEA plugin should be installed
 // https://kotest.io/docs/framework/testing-styles.html#expect-spec
@@ -241,6 +249,34 @@ class KotestTest : AnnotationSpec() {
                 name shouldBe "Sales"
                 location.phones.shouldNotBeEmpty()
             }
+        }
+    }
+
+    // ExceptionsTests
+    @Test
+    fun `expect throws`() {
+        val throwableCode: () -> Unit = { throw IllegalArgumentException("a") }
+
+        shouldThrowExactly<IllegalArgumentException>(throwableCode).should { ex ->
+            ex.shouldHaveMessage("a")
+            ex.shouldNotHaveMessage("b")
+            ex.shouldHaveMessage(Regex("a+"))
+
+            ex.message.shouldNotBeEmpty()
+
+            ex.shouldNotHaveCause()
+        }
+    }
+
+    @Test
+    fun `expect no exceptions`() {
+        shouldNotThrow<Throwable> { "I throw nothing" }
+    }
+
+    @Test
+    fun `expect catching exception`() {
+        shouldThrow<Exception> { throw IllegalStateException() }.should {
+            it.shouldBeInstanceOf<IllegalStateException>()
         }
     }
 }
