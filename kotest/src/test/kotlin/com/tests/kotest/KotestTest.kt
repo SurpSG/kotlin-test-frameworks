@@ -48,8 +48,8 @@ import io.kotest.matchers.string.shouldBeEmpty
 import io.kotest.matchers.string.shouldBeEqualIgnoringCase
 import io.kotest.matchers.string.shouldBeUpperCase
 import io.kotest.matchers.string.shouldHaveLength
+import io.kotest.matchers.string.shouldMatch
 import io.kotest.matchers.string.shouldNotBeEmpty
-import io.kotest.matchers.string.shouldNotMatch
 import io.kotest.matchers.string.shouldStartWith
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
@@ -86,10 +86,19 @@ class KotestTest : AnnotationSpec() {
     }
 
     @Test
+    fun `compare with incompatible type`() {
+        1 shouldBe "1"
+
+        // 1 shouldBeEqualComparingTo "1" // not compile
+
+        1.shouldBeTypeOf<String>().shouldBe("1")
+    }
+
+    @Test
     fun `soft assert`() {
         assertSoftly(1) {
             shouldNotBeEqualComparingTo(0)
-            shouldBe(2)
+            shouldBe(2) // prints clickable stacktrace frame to failed assertion
             shouldBeGreaterThanOrEqual(8)
         }
 
@@ -102,12 +111,11 @@ class KotestTest : AnnotationSpec() {
 
     // StringTest
     @Test
-    fun `string should start with x`() {
-
+    fun `general string assertions`() {
         assertSoftly(STRING_VALUE_TO_TEST) {
             shouldBeEqualComparingTo("aaaaa")
             shouldNotBeEqualComparingTo(STRING_VALUE_TO_TEST)
-            shouldNotMatch("[\\w\\s]+")
+            shouldMatch("[\\w\\s]+")
             shouldBeEqualIgnoringCase("ffffff")
             shouldStartWith("BBB")
         }

@@ -10,6 +10,7 @@ import com.tests.code.STRING_VALUE_TO_TEST
 import jdk.dynalink.linker.support.Guards.isNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import strikt.api.expect
 import strikt.api.expectCatching
 import strikt.api.expectThat
 import strikt.api.expectThrows
@@ -83,6 +84,13 @@ class StriktTest {
         }
 
         @Test
+        fun `compare with incompatible type`() {
+            expectThat(1) //.isEqualTo("1") compile error
+
+            expectThat(1).isA<String>().isEqualTo("1")
+        }
+
+        @Test
         fun `reverse assertions`() {
             expectThat(1)
                 .not()
@@ -94,7 +102,7 @@ class StriktTest {
         fun `soft assertion`() {
             expectThat(1) {
                 isNotEqualTo(0)
-                isEqualTo(2)
+                isEqualTo(2) // just prints detailed info what went wrong
                 isGreaterThanOrEqualTo(8)
             }
         }
@@ -108,7 +116,7 @@ class StriktTest {
     @Nested
     inner class StringTest {
         @Test
-        fun `assertions with context(AKA soft assertion)`() {
+        fun `general string assertions`() {
             expectThat(STRING_VALUE_TO_TEST) {
                 isEqualTo("aaaaa")
                 isNotEqualTo(STRING_VALUE_TO_TEST)
