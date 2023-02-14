@@ -3,6 +3,7 @@ package com.tests.kotest
 import com.tests.code.EMPLOYEES
 import com.tests.code.EMPLOYEE_ALICE
 import com.tests.code.EMPLOYEE_JOHN
+import com.tests.code.Employee
 import com.tests.code.LIST_1_2_3
 import com.tests.code.MAP_EMPLOYEES
 import com.tests.code.STRING_VALUE_TO_TEST
@@ -37,8 +38,11 @@ import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.maps.shouldNotBeEmpty
 import io.kotest.matchers.maps.shouldNotContainKey
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNot
+import io.kotest.matchers.string.beEmpty
 import io.kotest.matchers.string.shouldBeBlank
 import io.kotest.matchers.string.shouldBeEmpty
 import io.kotest.matchers.string.shouldBeEqualIgnoringCase
@@ -47,7 +51,10 @@ import io.kotest.matchers.string.shouldHaveLength
 import io.kotest.matchers.string.shouldNotBeEmpty
 import io.kotest.matchers.string.shouldNotMatch
 import io.kotest.matchers.string.shouldStartWith
+import io.kotest.matchers.types.shouldBeTypeOf
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
+// Kotest IDEA plugin should be installed
 // https://kotest.io/docs/framework/testing-styles.html#expect-spec
 // https://kotest.io/docs/assertions/core-matchers.html
 class KotestTest : AnnotationSpec() {
@@ -148,9 +155,9 @@ class KotestTest : AnnotationSpec() {
     @Test
     fun `elements by filter`() {
         assertSoftly(LIST_1_2_3) {
-            filter { it > 0 }.shouldHaveSize(3) // all match
-            filter { it > 0 }.shouldHaveAtLeastSize(1) // at least one match
-            filter { it < 0 }.shouldHaveSize(0) // none match
+            filter { it > 0 } shouldHaveSize 3 // all match
+            filter { it > 0 } shouldHaveAtLeastSize 1 // at least one match
+            filter { it < 0 } shouldHaveSize 0 // none match
 
             filterIsInstance<Int>().shouldHaveSize(3)
         }
@@ -203,5 +210,29 @@ class KotestTest : AnnotationSpec() {
     @Test
     fun `entry test`() {
         MAP_EMPLOYEES.shouldContain(1 to EMPLOYEE_ALICE)
+    }
+
+    // ObjectsTests
+    @Test
+    fun `object`() {
+        assertSoftly(EMPLOYEE_ALICE) {
+            shouldBe(EMPLOYEE_ALICE)
+            shouldNotBeNull()
+            shouldBeTypeOf<Employee>()
+            shouldNotBeSameInstanceAs(EMPLOYEES)
+        }
+    }
+
+    @Test
+    fun `object properties`() {
+        assertSoftly(EMPLOYEE_ALICE) {
+            name shouldBe "Alice"
+            department.name shouldNot beEmpty()
+
+            assertSoftly(department) {
+                name shouldBe "Sales"
+                location.phones.shouldNotBeEmpty()
+            }
+        }
     }
 }
