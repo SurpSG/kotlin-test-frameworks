@@ -4,6 +4,7 @@ include("kluent")
 include("strikt")
 include("spek")
 include("code-to-test")
+include("github")
 
 dependencyResolutionManagement {
     repositories {
