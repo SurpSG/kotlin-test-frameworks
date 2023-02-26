@@ -60,7 +60,6 @@ import io.kotest.matchers.throwable.shouldNotHaveMessage
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.types.shouldBeTypeOf
 import io.kotest.matchers.types.shouldNotBeSameInstanceAs
-import org.junit.jupiter.api.Test
 
 // Kotest IDEA plugin should be installed
 // https://kotest.io/docs/framework/testing-styles.html#expect-spec

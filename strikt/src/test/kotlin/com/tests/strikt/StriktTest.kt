@@ -24,6 +24,7 @@ import strikt.assertions.containsKey
 import strikt.assertions.containsKeys
 import strikt.assertions.count
 import strikt.assertions.doesNotContainKey
+import strikt.assertions.endsWith
 import strikt.assertions.exactly
 import strikt.assertions.filter
 import strikt.assertions.filterIsInstance
@@ -85,7 +86,7 @@ class StriktTest {
 
         @Test
         fun `compare with incompatible type`() {
-            expectThat(1) //.isEqualTo("1") compile error
+            expectThat(1)//.isEqualTo("1") //compile error
 
             expectThat(1).isA<String>().isEqualTo("1")
         }
@@ -163,6 +164,7 @@ class StriktTest {
                 }
 
                 this[0].isEqualTo(1)
+                get(0).isEqualTo(1)
                 withElementAt(0) {
                     isLessThanOrEqualTo(2)
                 }
@@ -190,7 +192,7 @@ class StriktTest {
         fun `assertions with transforming`() {
             expectThat(EMPLOYEES) {
                 flatMap { employee -> employee.department.location.phones }.count().isEqualTo(4)
-                map { employee -> employee.name }.containsExactlyInAnyOrder("Alice", "John")
+                map { employee -> employee.name }.containsExactlyInAnyOrder("Alice", "John") // vararg or iterable
             }
         }
     }
