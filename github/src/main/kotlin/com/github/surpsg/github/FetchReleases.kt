@@ -1,5 +1,8 @@
 package com.github.surpsg.github
 
+import org.kohsuke.github.GHIssue
+import org.kohsuke.github.GHIssueState
+import org.kohsuke.github.GHPullRequest
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GitHub
 import org.kohsuke.github.GitHubBuilder
@@ -21,7 +24,105 @@ fun main() {
     repos.forEach { repoName ->
         storeReleasesStats(repoName)
         storeCommitsStats(repoName)
+        storePrStats(repoName)
+        storeIssuesStats(repoName)
     }
+}
+
+fun storePrStats(project: String) {
+    println("Fetch all PRs of $project")
+    val getDate: GHPullRequest.() -> Date = { createdAt }
+
+    val repo: GHRepository = buildGithubClient().getRepository(project)
+    val allPullRequests: Iterable<GHPullRequest> = repo.queryPullRequests()
+        .state(GHIssueState.ALL)
+        .list()
+        .toList()
+        .sortedBy(getDate)
+
+    allPullRequests.forEach {
+        println("\tcreated=${dateFormat.format(it.getDate())}, isMerged=${it.isMerged}, title=${it.title}")
+    }
+
+    val mergedKey = "Merged"
+    val openKey = "Open"
+
+    val isMergedToDates: Map<String, List<Date>> = allPullRequests.toList().groupBy(
+        keySelector = { if (it.isMerged) mergedKey else openKey },
+        valueTransform = getDate
+    )
+
+    val firstPrDate = allPullRequests.minBy(getDate).getDate()
+    val csvData = isMergedToDates
+        .map { (status, dateCreated) ->
+            val prsByMonth: MutableMap<String, Int> = dateCreated
+                .groupingBy {
+                    dateFormat.format(it)
+                }
+                .eachCount()
+                .toMutableMap()
+
+            generateDateRange(firstPrDate)
+                .associate { dateFormat.format(it) to 0 }
+                .forEach { (date, count) -> prsByMonth.putIfAbsent(date, count) }
+
+            status to prsByMonth.toSortedMap()
+        }
+        .flatMap { (status, dates) ->
+            mutableListOf(status)
+                .union(
+                    dates.map { (date, count) -> "$date,$count" }
+                )
+        }
+
+    val name: String = project.substringAfter("/")
+    val targetPath = Path.of("$name-PR.csv")
+    targetPath.writeLines(csvData)
+}
+
+fun storeIssuesStats(project: String) {
+    println("Fetch all issues of $project")
+    val getDate: GHIssue.() -> Date = { createdAt }
+
+    val repo: GHRepository = buildGithubClient().getRepository(project)
+    val allIssues: List<GHIssue> = repo.queryIssues().state(GHIssueState.ALL).pageSize(100).list().toList()
+        .sortedBy(getDate)
+
+    allIssues.forEach {
+        println("\tcreated=${dateFormat.format(it.getDate())}, state=${it.state}, title=${it.title}")
+    }
+
+    val isClosedToDates: Map<GHIssueState, List<Date>> = allIssues.toList().groupBy(
+        keySelector = { it.state },
+        valueTransform = getDate
+    )
+
+    val firstIssueDate = allIssues.minBy(getDate).getDate()
+    val csvData = isClosedToDates
+        .map { (status, dateCreated) ->
+            val issueByMonth: MutableMap<String, Int> = dateCreated
+                .groupingBy {
+                    dateFormat.format(it)
+                }
+                .eachCount()
+                .toMutableMap()
+
+            generateDateRange(firstIssueDate)
+                .associate { dateFormat.format(it) to 0 }
+                .forEach { (date, count) -> issueByMonth.putIfAbsent(date, count) }
+
+            status to issueByMonth.toSortedMap()
+        }
+        .flatMap { (status, dates) ->
+            mutableListOf(status.name)
+                .union(
+                    dates.map { (date, count) -> "$date,$count" }
+                )
+        }
+
+    val name: String = project.substringAfter("/")
+    val targetPath = Path.of("$name-issues.csv")
+    targetPath.writeLines(csvData)
 }
 
 fun storeCommitsStats(project: String) {
