@@ -9,6 +9,7 @@ import com.tests.code.MAP_EMPLOYEES
 import com.tests.code.STRING_VALUE_TO_TEST
 import org.amshove.kluent.assertSoftly
 import org.amshove.kluent.`should be equal to`
+import org.amshove.kluent.`should contain same`
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeBlank
 import org.amshove.kluent.shouldBeEmpty
@@ -93,7 +94,7 @@ class KluentTest {
     @Nested
     inner class StringTest {
         @Test
-        fun `assertions with context(AKA soft assertion)`() {
+        fun `general string assertions`() {
             assertSoftly(STRING_VALUE_TO_TEST) {
                 shouldBe("aaaaa")
                 shouldNotBeEqualTo(STRING_VALUE_TO_TEST)
